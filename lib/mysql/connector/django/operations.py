@@ -30,7 +30,7 @@
 
 """Database Operations."""
 
-from datetime import datetime, time
+from datetime import datetime, time, timezone as dtz
 from typing import Optional
 
 from django.conf import settings
@@ -76,7 +76,7 @@ class DatabaseOperations(MySQLDatabaseOperations):
         # MySQL doesn't support tz-aware times
         if timezone.is_aware(value):
             if settings.USE_TZ:
-                value = value.astimezone(timezone.utc).replace(tzinfo=None)
+                value = value.astimezone(dtz.utc).replace(tzinfo=None)
             else:
                 raise ValueError("MySQL backend does not support timezone-aware times")
         if not self.connection.features.supports_microsecond_precision:
